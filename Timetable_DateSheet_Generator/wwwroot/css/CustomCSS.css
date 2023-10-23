@@ -1,0 +1,424 @@
+﻿
+
+.selectAll {
+    height: 30px;
+    width: 35px;
+    font-size: 9px;
+    display: inline-block;
+    position: relative;
+}
+
+.selectSlots {
+    height: 30px;
+    width: 27.5%;
+    font-size: 9px;
+    display: inline-block;
+    position: relative;
+}
+
+.page_right {
+    float: right;
+    font-size: 14px;
+}
+.CourseSlotDisplay {
+    width: 25px;
+    display: inline-block;
+    height: 25px;
+    border: solid;
+    border-width: 0.01px;
+    border-color: white;
+    border-radius: 25px;
+    padding-top: 6px;
+    text-align: center;
+    margin: 6px;
+    white-space: nowrap;
+}
+.page_right_badge {
+    display: inline-block;
+    font-size: 10px;
+    border: solid;
+    border-radius: 5px;
+    border-width: 0.01px;
+    border-color: dimgray;
+    background-color: forestgreen;
+}
+
+.table_detail {
+    width: 98%;
+    margin-left: 1%;
+    background-color: whitesmoke;
+    margin-top: 1%;
+    overflow-y: hidden;
+    overflow-x: auto;
+    border-radius: 6px;
+    box-shadow: 1px 1px 0.5px #e1e1dd;
+}
+
+
+
+select {
+    width: 50%;
+    height: 50px;
+    border-collapse: collapse;
+    color: #404040;
+    background-color: white;
+    border: solid;
+    border-width: 0.01px;
+    border-color: rgb(211,211,211);
+    border-radius: 14px;
+}
+
+selectSlot {
+    height: 30px;
+    width: 23.5%;
+    font-size: 9px;
+    display: inline-block;
+    position: relative
+}
+
+
+.custom_Form-item {
+    width: 50px;
+    height: 50px;
+    padding-top: 4px;
+    margin-left: 20px;
+    border-radius: 14px;
+    color: white;
+    background-color: #d73789;
+    font-style: normal;
+    font-family: 'Segoe UI';
+    display: inline-block;
+    font-size: 162.5%;
+    text-align: center;
+    border-width: 0.01px;
+}
+
+input {
+    width: 50%;
+    height: 50px;
+    border-collapse: collapse;
+    color: #404040;
+    background-color: white;
+    border: solid;
+    border-width: 0.01px;
+    border-color: rgb(211,211,211);
+    border-radius: 14px;
+}
+
+.search_input {
+    width: 40%;
+    color: grey;
+    background-color: white;
+}
+
+.group {
+    position: relative;
+    margin-top: 20px;
+    animation: 1s ease-out 0s 1 slide;
+    margin-bottom: 30px;
+}
+
+.label {
+    color: #606060;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.label_For_textBox {
+    margin-left: 30px;
+    left: 50px;
+    top: 10px;
+    position: absolute;
+    pointer-events: none;
+    transition: 0.2s ease all;
+    -moz-transition: 0.2s ease all;
+    -webkit-transition: 0.2s ease all;
+}
+
+select:focus ~ label, select:valid ~ label {
+    top: -25px;
+    left: -20px;
+    color: #707070;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+input:focus ~ label, input:valid ~ label {
+    top: -25px;
+    white-space: nowrap;
+    left: -20px;
+    font-size: 14px;
+    color: #707070;
+}
+
+.form {
+    background-color: white;
+    border-color: #e1e1dd;
+    border-radius: 6px;
+    padding-top: 5px;
+}
+
+.edit_Form {
+    width: 98%;
+    background-color: white;
+    margin: 1%;
+    overflow-y: auto;
+}
+
+.form_small {
+    width: 100%;
+    overflow: hidden;
+}
+
+    .form_small:hover {
+        overflow-y: auto;
+    }
+
+.form_Wide {
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
+    max-height: 65%;
+    border: solid;
+    border-width: 0.01px;
+    border-color: dimgray;
+    border-radius: 6px;
+    margin-top: 10px;
+    overflow: auto;
+    background-color: white;
+}
+
+.custom_container {
+    width: 100%;
+    height: 65px;
+    position: relative;
+    background-color: white;
+    border-bottom: 0.0001px ridge #e1e1dd !important;
+    border-collapse: collapse;
+    white-space: nowrap;
+    text-overflow: clip;
+    animation: 1s ease-out 0s 1 slide;
+    overflow: hidden;
+    display: block;
+}
+
+    .custom_container:hover {
+        transition-duration: 0.1s;
+        background-color: ghostwhite;
+        color: black;
+    }
+
+.custom_container-item {
+    width: 50px;
+    height: 50px;
+    padding-top: 8px;
+    color: white;
+    margin-top: 7px;
+    font-family: 'Segoe UI';
+    display: inline-block;
+    font-size: 21px;
+    text-align: center;
+    border-radius: 4px;
+    font-style: normal;
+}
+
+.custom_container-item_details {
+    font-size: 15px;
+    font-family: 'Segoe UI Emoji';
+    display: inline-block;
+    color: black;
+    word-spacing: 1px;
+    letter-spacing: 0.2px;
+    font-weight: 400;
+}
+
+.my-font-property {
+    font-size: 12px;
+    word-spacing: 1px;
+    display: inline-block;
+    padding-left: 15px;
+    color: #999999;
+}
+
+
+
+.my-font-properties {
+    word-spacing: 0.5px;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    color: black;
+    margin-left: 5px;
+    font-size: 14px;
+    font-family: 'Segoe UI';
+    word-spacing: 1px;
+    font-weight: 600;
+}
+
+.icon-properties {
+    color: #04cc82;
+    margin-left: 3px;
+    font-size: 18px;
+    margin-left: 3px;
+    display: inline-block;
+}
+
+.sub-icon-properties {
+    margin-left: 10px;
+    color: #03a56a;
+    font-size: 18px;
+    display: inline-block;
+}
+
+.input_checkBox {
+    margin-left: 40px;
+    height: 20px;
+    width: 20px;
+    color: white;
+    display: inline-block;
+    border-radius: 6px;
+}
+
+.checkbox_Label {
+    font-size: 15px;
+    display: inline-block;
+    padding-left: 5px;
+    top: -5px;
+}
+
+.checkBox_container {
+    display: inline-block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    margin-left: 80px;
+    margin-top: 10px;
+    color: #606060;
+    font-style: normal;
+    font-family: 'Segoe UI';
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* Hide the browser's default checkbox */
+    .checkBox_container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: whitesmoke;
+    box-shadow: 0.5px 0.5px 0.5px 0.5px #888888;
+    border-radius: 6px;
+}
+
+hr {
+    background-color: #e1e1dd;
+}
+/* On mouse-over, add a grey background color */
+.checkBox_container:hover input ~ .checkmark {
+    background-color: azure;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkBox_container input:checked ~ .checkmark {
+    background-color: #009900;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.checkBox_container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkBox_container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+
+
+table {
+    font-family: 'Segoe UI';
+    border-collapse: collapse;    
+}
+
+    table td, table th {                
+        animation: 1s ease-out 0s 1 slide;
+    }
+
+    table tr:nth-child(even) {
+        background-color: white;
+    }
+
+    table tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    table tr:hover {
+        background-color: white;
+    }
+
+    table th {        
+    }
+
+@keyframes slide {
+    0% {
+        transform: translateY(-100%);
+    }
+}
+/* The Close Button */
+.close {
+    color: red;
+    float: right;
+    display: inline-block;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+    }
+
+
+.CourseSlotDisplay {
+    width: 25px;
+    display: inline-block;
+    height: 25px;
+    border: solid;
+    border-width: 0.01px;
+    border-color: white;
+    border-radius: 25px;
+    padding-top: 6px;
+    text-align: center;
+    margin: 6px;
+    white-space: nowrap;
+}

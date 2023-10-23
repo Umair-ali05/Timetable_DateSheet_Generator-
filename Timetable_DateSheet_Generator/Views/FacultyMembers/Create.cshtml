@@ -1,0 +1,128 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.FacultyViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Create" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Create"></div>
+<div class="modal fade" id="modal-lg_Create">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    <div class="text-danger">@ViewBag.Message</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-university" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select class="form-control" id="institute" asp-items="ViewBag.Institutes" onchange="loadDepartments()">
+                                    <option selected value="">Select Institute</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-school" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select id="department" asp-for="FacultyMember.DepartmentID" class="form-control" asp-items="ViewBag.Departments" required>
+                                    <option selected value="">Select Department</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="text" class="form-control" asp-for="registerViewModel.Name" required placeholder="Name" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="email" class="form-control" asp-for="registerViewModel.UserEmail" required placeholder="Email" />
+                                <span asp-validation-for="registerViewModel.UserEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="password" class="form-control" asp-for="registerViewModel.Password" required placeholder="Password" />
+                                <span asp-validation-for="registerViewModel.Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="password" class="form-control" asp-for="registerViewModel.ConfirmPassword" required placeholder="Confirm Password" />
+                                <span asp-validation-for="registerViewModel.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input class="form-control" accept="image/*" asp-for="registerViewModel.Image" placeholder="Upload Picture" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-plus"></i> Add Faculty</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function loadDepartments() {
+        var options = [];
+
+        $.ajax({
+            type: "POST",
+            url: "/Administration/FacultyMembers/getDepartments?institute=" + $("#institute :selected").val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                options.push('<option value=""> Select Department</option>')
+                for (var i = 0; i < Data.length; i++) {
+                    options.push('<option value="',
+                        Data[i].id, '">',
+                        Data[i].name, '</option>');
+                }
+                $("#department").html(options.join(''));
+            },
+            error: function () {  }
+        });
+    }
+    $(document).ready(function () {
+
+        document.getElementById('Click_Create').click();
+    });
+</script>
+

@@ -1,0 +1,108 @@
+﻿@model Timetable_DateSheet_Generator.Models.Rooms
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Edit" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Edit"></div>
+<div class="modal fade" id="modal-lg_Edit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Room Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Edit" method="post">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="RoomID" />
+                    <div class="text-danger">@ViewBag.Message</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-school" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select class="form-control" id="institute" asp-items="ViewBag.Institutes" onchange="loadBuildings()">
+                                    <option selected value="">Select Institute</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-school" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select id="building" asp-for="BuildingID" class="form-control" asp-items="ViewBag.Buildings" required>
+                                    <option selected value="">Select Building</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-th-list" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select asp-for="RoomType" class="form-control" asp-items="@Html.GetEnumSelectList<Rooms.RoomTypes>()" required>
+                                    <option selected value="">Select Room Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-home" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="text" class="form-control" asp-for="RoomName" required placeholder="Room Name" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-chair" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="number" min="0" class="form-control" asp-for="SeatingCapacity" required placeholder="Seating Capacity" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-sync"></i> Update Record</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    function loadBuildings() {
+        var options = [];
+
+        $.ajax({
+            type: "POST",
+            url: "/Administration/Rooms/getBuildings?institute=" + $("#institute :selected").val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                options.push('<option value=""> Select Building</option>')
+                for (var i = 0; i < Data.length; i++) {
+                    options.push('<option value="',
+                        Data[i].id, '">',
+                        Data[i].name, '</option>');
+                }
+                $("#building").html(options.join(''));
+            },
+            error: function () { }
+        });
+    }
+    $(document).ready(function () {
+
+        document.getElementById('Click_Edit').click();
+    });
+</script>

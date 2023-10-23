@@ -1,0 +1,146 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.RegisterCourseViewModelList
+@using Microsoft.AspNetCore.Identity;
+@using Timetable_DateSheet_Generator.Data.DbContext;
+@inject SignInManager<ApplicationUser> signInManager
+@inject Timetable_DateSheet_Context Context
+
+
+<div style="display:none" id="Click_Details" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Details"></div>
+<div class="modal fade" id="modal-lg_Details">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Course Registration Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row">
+                    <div id="loadstudent" class="col-sm-12">
+                        <div class="col-sm-6">
+                            Course: @ViewBag.Course
+                        </div>
+                        <section class="content">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <!-- /.card -->
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3 class="card-title">List of students are shown below:</h3>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <div class="card-body">
+
+
+                                                <table id="example1" class="table table-bordered " style="font-size:12px;">
+                                                    <thead class="table-avatar" style="color:#656565;text-align:center">
+                                                        <tr>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-down"></i> #</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-th-list"></i> Program</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-user-graduate"></i> Name</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-alpha-up"></i> Enrollment</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-envelope"></i> Email</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+                                                            int i = 0;
+                                                        }
+                                                        @foreach (var item in Model.studentCourseDetailViewModel)
+                                                        {
+                                                            <tr>
+
+                                                                <td style="text-align:center">
+                                                                    <input id="@i course" type="hidden" asp-for="@item.course" />
+                                                                    <input id="@i student" type="hidden" asp-for="@item.studentId " />
+                                                                    @(i + 1)
+                                                                    @{
+                                                                        var user = Context.Users.Where(c => c.Id.Equals(item.User)).FirstOrDefault();
+                                                                        if (user != null)
+                                                                        {
+                                                                            if (string.IsNullOrEmpty(user.Image))
+                                                                            {
+                                                                                <img src="~/dist/img/user.png" class=" img-circle" height="20" width="20">
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img src="@user.Image" class=" img-circle" height="20" width="20">
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </td>
+                                                                <td style="text-align:center">
+                                                                    @item.programName
+                                                                </td>
+                                                                <td style="text-align:center">
+                                                                    @if (string.IsNullOrEmpty(item.path))
+                                                                    {
+                                                                        <img src="~/dist/img/user.png" class=" img-circle" height="20" width="20">
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="@item.path" class=" img-circle" height="20" width="20">
+                                                                    }
+                                                                    @item.Name
+                                                                </td>
+                                                                <td style="text-align:center">
+                                                                    @item.enrollment
+                                                                </td>
+                                                                <td style="text-align:center">
+                                                                    <i><a href="#">@item.Email</a></i>
+                                                                </td>
+                                                               
+                                                            </tr>
+                                                            i += 1;
+                                                        }
+                                                    </tbody>
+                                                    <tfoot class="table-avatar" style="color:#656565;text-align:center">
+                                                        <tr>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-up"></i> #</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-th-list"></i> Program</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-user-graduate"></i> Name</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-alpha-up"></i> Enrollment</th>
+                                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-envelope"></i> Email</th>
+                                                            
+                                                        </tr>
+                                                    </tfoot>
+                                                </table><hr />
+                                                
+
+                                            </div>
+                                            <!-- /.card-body -->
+                                        </div>
+                                        <!-- /.card -->
+                                    </div>
+                                    <!-- /.col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.container-fluid -->
+                        </section>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<script>
+    
+</script>
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Click_Details').click();
+    });
+</script>
+

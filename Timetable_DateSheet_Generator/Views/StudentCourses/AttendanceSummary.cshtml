@@ -1,0 +1,310 @@
+﻿@model IEnumerable<Timetable_DateSheet_Generator.Models.ViewModels.StudentAttendanceViewModel>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Identity;
+@using Timetable_DateSheet_Generator.Data.DbContext;
+@inject SignInManager<ApplicationUser> signInManager
+@inject Timetable_DateSheet_Context Context
+<div style="display:none" id="Click_Summary" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Summary"></div>
+<div class="modal fade" id="modal-lg_Summary">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Students Attendance Summary (@ViewBag.Course.OfferedCourseTitle)</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="text-danger">@ViewBag.Message</div>
+                <div class="row">
+
+                    <div class="col-sm-3">
+                        @*<div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-clock" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select class="form-control" asp-for="Attendance.AttendanceCreditHours" asp-items="Html.GetEnumSelectList<Attendance.AttendanceHours>()">
+                                    <option selected value="">Select Contact Hours</option>
+                                </select>
+                                <input type="hidden" asp-for="Attendance.OfferedCourseID" />
+                            </div>*@
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">List of attendances are shown below:</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table id="example3" class="table table-bordered ">
+                                    <thead class="table-avatar" style="color:#656565;text-align:center">
+                                        <tr style="font-size:12px;">
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-down"></i> #</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-user-graduate"></i> Name</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-list-ol"></i> Enrollment</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-graduation-cap"></i> Department</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-calendar-alt"></i> Date</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-check"></i> Present Hours</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8">&times;</i> Absent Hours</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (ViewBag.Flag == "y")
+                                        {
+                                        <tr style="font-size:12px;background-color:#c5e1a5">
+                                            <td style="font-weight:400;text-align:center"> Total: @ViewBag.TotalHours </td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center"></td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center">@ViewBag.TotalPresentHours (@ViewBag.Percentage)</td>
+                                            <td style="font-weight:400;text-align:center">@ViewBag.TotalAbsentHours (@ViewBag.AbsentPercentage)</td>
+                                        </tr>
+                                        }
+                                        else
+                                        {
+                                        <tr style="font-size:12px;background-color:#ffa3a6">
+                                            <td style="font-weight:400;text-align:center"> Total: @ViewBag.TotalHours </td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center"></td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center"> </td>
+                                            <td style="font-weight:400;text-align:center">@ViewBag.TotalPresentHours (@ViewBag.Percentage)</td>
+                                            <td style="font-weight:400;text-align:center">@ViewBag.TotalAbsentHours (@ViewBag.AbsentPercentage)</td>
+                                        </tr>
+                                        }
+                                        @{
+                                            int i = 0;
+                                        }
+                                        @foreach (var item in Model)
+                                        {
+                                            @if (!item.isPresent)
+                                            {
+                                        <tr style="font-size:12px; background-color:rgb(240,240,240)">
+                                            <td style="text-align:center">
+                                                @(i + 1)
+                                                @{
+                                                    var user = Context.Users.Where(c => c.Id.Equals(item.Attendance.User)).FirstOrDefault();
+                                                    if (user != null)
+                                                    {
+                                                        if (string.IsNullOrEmpty(user.Image))
+                                                        {
+                                                            <img src="~/dist/img/user.png" class=" img-circle" height="40" width="40">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@user.Image" class=" img-circle" height="40" width="40">
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td style="text-align:center">
+                                                @{
+
+                                                    var user2 = Context.Users.Where(c => c.Id.Equals(item.Student.UserID)).FirstOrDefault();
+                                                    if (user2 != null)
+                                                    {
+                                                        if (string.IsNullOrEmpty(user2.Image))
+                                                        {
+                                                            <img src="~/dist/img/user.png" class=" img-circle" height="40" width="40">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@user2.Image" class=" img-circle" height="40" width="40">
+                                                        }
+                                                    }
+                                                }
+                                                @user2.Name
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Student.StudentEnrollment
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Student.Program.Department.DepartmentName - @item.Student.Program.ProgramName
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Attendance.AttendanceDate.ToString("dd/MMM/yyy hh:mm:ss tt")
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.PresentHours
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.AbsentHours
+                                            </td>
+                                        </tr>
+
+                                            }
+                                            else
+                                            {
+                                        <tr style="font-size:14px;">
+                                            <td style="text-align:center">
+                                                @(i + 1)
+                                                @{
+                                                    var user = Context.Users.Where(c => c.Id.Equals(item.Attendance.User)).FirstOrDefault();
+                                                    if (user != null)
+                                                    {
+                                                        if (string.IsNullOrEmpty(user.Image))
+                                                        {
+                                                            <img src="~/dist/img/user.png" class=" img-circle" height="40" width="40">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@user.Image" class=" img-circle" height="40" width="40">
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td style="text-align:center">
+                                                @{
+
+                                                    var user2 = Context.Users.Where(c => c.Id.Equals(item.Student.UserID)).FirstOrDefault();
+                                                    if (user2 != null)
+                                                    {
+                                                        if (string.IsNullOrEmpty(user2.Image))
+                                                        {
+                                                            <img src="~/dist/img/user.png" class=" img-circle" height="40" width="40">
+                                                        }
+                                                        else
+                                                        {
+                                                            <img src="@user2.Image" class=" img-circle" height="40" width="40">
+                                                        }
+                                                    }
+                                                }
+                                                @user2.Name
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Student.StudentEnrollment
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Student.Program.Department.DepartmentName - @item.Student.Program.ProgramName
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.Attendance.AttendanceDate.ToString("dd/MMM/yyy hh:mm:ss tt")
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.PresentHours
+                                            </td>
+                                            <td style="text-align:center">
+                                                @item.AbsentHours
+                                            </td>
+                                        </tr>
+
+                                            }
+                                            i += 1;
+                                        }
+                                    </tbody>
+                                    <tfoot class="table-avatar" style="color:#656565;text-align:center">
+                                        <tr>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-up"></i> #</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-user-graduate"></i> Name</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-list-ol"></i> Enrollment</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-graduation-cap"></i> Department</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-calendar-alt"></i> Date</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-check"></i> Present Hours</th>
+                                            <th style="font-weight:400"><i style="color:#17a2b8">&times;</i> Absent Hours</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Click_Summary').click();
+         @{
+             var tempUser=new  ApplicationUser();
+             if(Model.Count()>0)
+             {
+                 tempUser = Context.Users.Where(c => c.Id.Equals(Model.FirstOrDefault().Student.UserID)).FirstOrDefault();
+             }
+             else
+             {
+                 tempUser = null;
+             }
+             var name = "";
+             var enrollment = "";
+             if(tempUser!=null)
+             {
+                 name =tempUser.Name;
+             enrollment=Model.FirstOrDefault().Student.StudentEnrollment;
+             }
+         }
+
+        $("#example3").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0,1,2,3,4,5]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: '@name' +" ("+'@enrollment'+ ") Attendance<br/> ("+'@ViewBag.Course.OfferedCourseTitle'+")",
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+    });
+    $(function () {
+
+    });
+</script>
+

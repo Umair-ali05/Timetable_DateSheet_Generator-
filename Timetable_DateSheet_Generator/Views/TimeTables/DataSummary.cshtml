@@ -1,0 +1,229 @@
+﻿@model IEnumerable<Timetable_DateSheet_Generator.Controllers.Administration.Summary>
+@{
+    ViewData["Title"] = "TimetableSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body>
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header p-2">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a class="nav-link active" href="~/Administration/TimeTables/Actions">Timetables</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/Administration/TimeTableSlots/Actions">Timetable TimeSlots</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><i style="color:#17a2b8" class="fa fa-database"></i> Data Summary</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="~/Administration/Dashboard/View">Dashboard</a></li>
+                        <li class="breadcrumb-item active"><a href="~/Administration/TimeTables/Actions">Timetables</a> </li>
+                        <li class="breadcrumb-item">Data Summary</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered ">
+            <thead class="table-avatar" style="color:#656565;text-align:center">
+                <tr style="font-size:12px;">
+                    <th style="font-weight:400">#</th>
+                    <th style="font-weight:400">Institute</th>
+                    <th style="font-weight:400">Department</th>
+                    <th style="font-weight:400">Program</th>
+                    <th style="font-weight:400">Theory Courses</th>
+                    <th style="font-weight:400">Lab Courses</th>
+                    <th style="font-weight:400">Class Rooms</th>
+                    <th style="font-weight:400">Labs</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr style="font-size:12px;">
+                        <td style="text-align:center">
+                            @(i + 1)
+
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Program.Department.Institute.InstituteName)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Program.Department.DepartmentName)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.Program.ProgramName)
+                        </td>
+
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.numberOfTheoryCourses)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.numberOfLabCourse)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.numberOfClassrooms)
+                        </td>
+                        <td style="text-align:center">
+                            @Html.DisplayFor(modelItem => item.numberOfLabs)
+                        </td>
+
+                    </tr>
+                    i += 1;
+                }
+            </tbody>
+            <tfoot>
+                <tr style="font-size:12px;">
+                    <th style="font-weight:400;text-align:center">#</th>
+                    <th style="font-weight:400;text-align:center">Institute</th>
+                    <th style="font-weight:400;text-align:center">Department</th>
+                    <th style="font-weight:400;text-align:center">Program</th>
+                    <th style="font-weight:400;text-align:center">Theory Courses</th>
+                    <th style="font-weight:400;text-align:center">Lab Courses</th>
+                    <th style="font-weight:400;text-align:center">Class Rooms</th>
+                    <th style="font-weight:400;text-align:center">Labs</th>
+                </tr>
+            </tfoot>
+
+        </table>
+    </div>
+    <div class="group" style="margin:1%">
+        <button id="GenerateBTN" type="submit" data-toggle="tooltip" title="Generate Timetable" onclick="Generate()" class="btn btn-info btn-block "><i class="fas fa-cog"></i> Generate Timetable</button>
+    </div>
+    <br />
+    <div id="GenerateTimetable">
+    </div>
+    <div id="GenerateTimetableReport">
+    </div>
+</body>
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<script>
+    window.onload = function () {
+        }
+     function Generate() {
+         var ls = document.getElementById("GenerateTimetable");
+         ls.innerHTML = "";
+         $('#GenerateTimetable').append(
+             $('<div>').prop({
+                 id: 'loaders',
+                 innerHTML: '',
+                 className: 'loader'
+             })
+         );
+         ls.innerHTML += '<span style="padding-left:40%"> Generating Timetable. Please Wait...</span>'
+         var button = document.getElementById("GenerateBTN");
+         button.innerHTML = '<i class="fas fa-cog fa-spin"></i> Generate Timetable';
+         button.disabled = true;
+         //window.location.href = "/TimeTables/GenerateTimetable?TimeTable=" + '@ViewBag.TimeTable.TimeTableID';
+         $("#GenerateTimetable").load(
+             "/Administration/TimeTables/GenerateTimetable", { TimeTableID:'@ViewBag.TimeTable.TimeTableID'},
+             function (response, status, xhr) {
+                 var el = document.getElementById("loaders");
+                 el.style.display = "none";
+                 button.innerHTML = '<i class="fas fa-cog"></i> Generate Timetable';
+                 button.disabled = false;
+                 if (status == "success") {
+                     toastr.success('Success!');
+                 } else if (status == "error" || status == "timeout") {
+                     // ERROR and TIMEOUT request //
+                     ls.innerHTML = "";
+                     var msg = "Sorry! An error has occurred. Please try again later";
+                     ls.innerHTML = "<label>" + msg + "</label>";
+                     toastr.error(msg);
+
+                 } else if (status == "notmodified") {
+                     // NOT MODIFIED request (likely cached) //
+                     ls.innerHTML = "";
+                     toastr.error('Error! Not Generated.');
+                     ls.innerHTML = "<label>Error! Not Generated </label>";
+
+                 } else if (status == "abort") {
+                     ls.innerHTML = "";
+                     toastr.error('Error! Not Generated.');
+                     ls.innerHTML = "<label>Error! Not Generated </label>";
+                     // ABORTED request //
+
+                 }
+                });
+    }
+    $(function () {
+        if ('@ViewBag.MessageType'.toLowerCase() == "success")
+            toastr.success('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.info('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "error")
+            toastr.error('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.warning('@ViewBag.Message');
+        else;
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: 'Timetable Data Summary',
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: 'Timetable Data Summary',
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Timetable Data Summary',
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Timetable Data Summary',
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Timetable Data Summary',
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: 'Timetable Data Summary',
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1,2,3,4,5,6,7]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+    window.onload = function () {
+        var el = document.getElementById("nav_timetable");
+        el.classList.add("navbar-cyan");
+    }
+</script>
+

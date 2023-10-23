@@ -1,0 +1,52 @@
+﻿@model Timetable_DateSheet_Generator.Models.Semesters
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Details" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Details"></div>
+<div class="modal fade" id="modal-lg_Details">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Semester Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color:gainsboro">
+                
+                
+                        <div class="col-sm-6">
+                            <h5><i style="color:#17a2b8" class="fa fa-th-list"></i> Semester Type</h5>
+                            <p>@Model.getSemesterType</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5><i style="color:#17a2b8" class="fa fa-th-list"></i> Semester Type</h5>
+                            <p>@Model.getSemesterType</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5><i style="color:#17a2b8" class="fa fa-th-list"></i> Semester Type</h5>
+                            <p>@ViewBag.Name</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5><i style="color:#17a2b8" class="fa fa-th-list"></i> Semester Type</h5>
+                            <p>@Model.Last_Modified</p>
+                        </div>                        
+                
+                
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Click_Details').click();
+
+    });
+</script>

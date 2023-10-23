@@ -1,0 +1,326 @@
+﻿@model IEnumerable<Timetable_DateSheet_Generator.Controllers.Administration.Report>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h1><i style="color:#17a2b8" class="fa fa-cog"></i> Timetable Generations</h1>
+        </div>
+    </div>
+</div><!-- /.container-fluid -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
+                <div class="card">
+
+                    <div class="card-body">
+                        <table id="example3" class="table table-bordered ">
+                            <thead class="table-avatar" style="color:#656565;text-align:center">
+                                <tr style="font-size:12px;">
+                                    <th style="font-weight:400">#</th>
+                                    <th style="font-weight:400">Fitness (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in ViewBag.Results)
+                                {
+                                <tr style="font-size:12px;">
+                                    <td style="text-align:center">
+                                        @(i + 1)
+
+                                    </td>
+                                    <td style="text-align:center">
+                                        @item
+                                    </td>
+
+                                </tr>
+                                    i += 1;
+                                }
+                                    <tr style="font-size:12px;">
+                                        <th style="text-align:center">Best Timetable</th>
+                                        <th>@ViewBag.Best</th>
+                                    </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-size:12px;">
+                                    <th style="font-weight:400;text-align:center">#</th>
+                                    <th style="font-weight:400;text-align:center">Item</th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1><i style="color:#17a2b8" class="far fa-calendar-alt"></i> Timetable Report</h1>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+                <div class="card">
+                    <div class="card-body">
+                        <table id="example2" class="table table-bordered ">
+                            <thead class="table-avatar" style="color:#656565;text-align:center">
+                                <tr style="font-size:12px;">
+                                    <th style="font-weight:400">#</th>
+                                    <th style="font-weight:400">Offered Course (Contact Hours)</th>
+                                    <th style="font-weight:400">Time(Day)</th>
+                                    <th style="font-weight:400">Program Timings(H-Constraint)</th>
+                                    <th style="font-weight:400">Room Timings(H-Constraint)</th>
+                                    <th style="font-weight:400">Room Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Class Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Faculty Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Faculty Availibility(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int j = 0;
+                                }
+                                @foreach (var report in Model)
+                                {
+                                    <tr style="font-size:12px;">
+
+                                        <td>@(j + 1)</td>
+                                        <td>@report.OfferedCourseTimeSlots.ElementAt(0).OfferedCourse.OfferedCourseTitle (@(report.OfferedCourseTimeSlots.Count / 4))</td>
+                                        <td>@report.OfferedCourseTimeSlots.ElementAt(0).TimeSlots.Time.getTime(report.OfferedCourseTimeSlots.ElementAt(0).TimeSlots.Time.StartTime) to @report.OfferedCourseTimeSlots.ElementAt(0).TimeSlots.Time.getTime(report.OfferedCourseTimeSlots.ElementAt(report.OfferedCourseTimeSlots.Count - 1).TimeSlots.Time.FinishTime) (@report.OfferedCourseTimeSlots.ElementAt(0).TimeSlots.Time.getDay(@report.OfferedCourseTimeSlots.ElementAt(0).TimeSlots.Time.TimeWeekDay))</td>
+                                        <td id="PT @j">@report.ProgamTimings</td>
+                                        <td id="RT @j">@report.RoomTimings</td>
+                                        <td id="RC @j">@report.RoomClash</td>
+                                        <td id="CC @j">@report.ClassClash</td>
+                                        <td id="FC @j">@report.FacultyClash</td>
+                                        <td>@report.FacultyAvailibilty</td>
+                                    </tr>
+                                    j += 1;
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-size:12px;">
+                                    <th style="font-weight:400">#</th>
+                                    <th style="font-weight:400">Offered Course (Contact Hours)</th>
+                                    <th style="font-weight:400">Time(Day)</th>
+                                    <th style="font-weight:400">Program Timings(H-Constraint)</th>
+                                    <th style="font-weight:400">Room Timings(H-Constraint)</th>
+                                    <th style="font-weight:400">Room Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Class Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Faculty Clash(H-Constraint)</th>
+                                    <th style="font-weight:400">Faculty Availibility(%)</th>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+                <button class="btn btn-info btn-block" onclick="View()"><i class="fa fa-desktop"></i> View Timetable</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function View() {
+        window.location.href ="DisplayTimetableClassWise?timetable="+@ViewBag.TimeTable.TimeTableID;
+    }
+    window.onload = function () {
+    }
+     $(document).ready(function () {
+
+        var count ='@Model.Count()';
+
+            ChangeValues(count)
+        });
+    function ChangeValues(count) {
+            var K = 0;
+        @foreach(var item in Model)
+        {
+            @:var PT = ""
+            @:var RT = ""
+            @:var RC = ""
+            @:var FC = ""
+            @:var CC = ""
+            if(item.ProgamTimings==true)
+            {
+                @:PT = "1";
+            }
+            else
+            {
+                @:PT = "0";
+            }
+            if(item.RoomTimings==true)
+            {
+                @:RT = "1";
+            }
+            else
+            {
+                @:RT = "0";
+            }
+            if(item.RoomClash==true)
+            {
+                @:RC = "1";
+            }
+            else
+            {
+                @:RC = "0";
+            }
+            if(item.FacultyClash==true)
+            {
+                @:FC = "1";
+            }
+            else
+            {
+                @:FC = "0";
+            }
+            if(item.ClassClash==true)
+            {
+                @:CC = "1";
+            }
+            else
+            {
+                @:CC = "0";
+            }
+            @:showContent("PT "+K.toString(), PT,"Solved.","Not Solved.");
+            @:showContent("RT "+K.toString(), RT,"Solved.","Not Solved.");
+            @:showContent("RC "+K.toString(), RC,"No Clashes Found.","Clashes Found.");
+            @:showContent("FC "+K.toString(), FC,"No Clashes Found.","Clashes Found.");
+            @:showContent("CC "+K.toString(), CC,"No Clashes Found.","Clashes Found.");
+            @:K++;
+        }
+        }
+
+    function showContent(id,Bool,str,str2) {
+        if (Bool == "1") {
+            var element = document.getElementById(id);
+            element.innerHTML = '<span style="color:#04cc82;font-size:12px;" class="fas fa-check"></span> '+str;
+        }
+        else {
+            var element = document.getElementById(id);
+            element.innerHTML = '<span style="color:#F08080;font-size:12px;" class="fas fa-times"></span> '+str2;
+        }
+    }
+    $(function () {
+        if ('@ViewBag.MessageType'.toLowerCase() == "success")
+            toastr.success('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.info('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "error")
+            toastr.error('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.warning('@ViewBag.Message');
+        else;
+        $("#example2").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+                {
+                    extend: 'print',
+title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: 'Timetable Report</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7,8]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+
+        $("#example3").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: 'Timetable Generations</br>'+'@ViewBag.TimeTable.Institute.InstituteName'+' ('+'@ViewBag.TimeTable.Semester.getSemesterType'+'-'+'@ViewBag.TimeTable.Semester.SemesterYear'+' )',
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example3_wrapper .col-md-6:eq(0)');
+    });
+</script>

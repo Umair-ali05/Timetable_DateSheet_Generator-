@@ -1,0 +1,71 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.RegisterViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Edit" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Edit"></div>
+<div class="modal fade" id="modal-lg_Edit">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Administrator Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="ID" />
+                    <div class="text-danger">@ViewBag.Message</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user-secret" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="text" class="form-control" asp-for="Name" required placeholder="Name" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="email" class="form-control" asp-for="UserEmail" required placeholder="Email" />
+                                <span asp-validation-for="UserEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input class="form-control" accept="image/*" asp-for="Image" placeholder="Upload Picture" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="hidden" class="form-control" asp-for="ConfirmPassword" required placeholder="Confirm Password" />
+                        <input type="hidden" class="form-control" asp-for="Password" required placeholder="Password" />
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-sync"></i> Update Record</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    
+    $(document).ready(function () {
+
+        document.getElementById('Click_Edit').click();
+    });
+</script>

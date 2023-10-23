@@ -1,0 +1,50 @@
+﻿@model Timetable_DateSheet_Generator.Models.Semesters
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Create" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Create"></div>
+<div class="modal fade" id="modal-lg_Create">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Create" method="post">
+                <div class="modal-body">
+
+                    <div class="text-danger">@ViewBag.Message</div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-th-list" style="color:#17a2b8"></i></span>
+                        </div>
+                        <select data-toggle="tooltip" class="form-control"  title=" Select Semester Type" asp-for="SemesterType" asp-items="@Html.GetEnumSelectList<Semesters.type>()" required>
+                            <option disabled selected> Select Semester Type</option> 
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-calendar-check" style="color:#17a2b8"></i></span>
+                        </div>
+                        <input type="number" maxlength="4" minlength="2" class="form-control" asp-for="SemesterYear" required placeholder="Semester Year">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-plus"></i> Add Semester</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Click_Create').click();
+    });
+</script>

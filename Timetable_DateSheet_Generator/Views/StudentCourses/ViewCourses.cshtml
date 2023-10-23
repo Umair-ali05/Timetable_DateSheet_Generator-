@@ -1,0 +1,238 @@
+﻿@model IEnumerable<Timetable_DateSheet_Generator.Models.RegisteredCourses>
+@using Microsoft.AspNetCore.Identity;
+@using Timetable_DateSheet_Generator.Data.DbContext;
+@inject SignInManager<ApplicationUser> signInManager
+@inject Timetable_DateSheet_Context Context
+@{
+    ViewData["Title"] = "ViewCourses";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+<div id="create"></div>
+<div id="edit"></div>
+<div id="delete"></div>
+<div id="view"></div>
+<div id="pass"></div>
+<section class="content-header">
+
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1><i style="color:#17a2b8" class="fa fa-book"></i> Registered Courses</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="~/Faculty/Dashboard/View">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Registered Courses</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- /.card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List of registered courses are shown below:</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered ">
+                            <thead class="table-avatar" style="color:#656565;text-align:center">
+                                <tr>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-down"></i> #</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-th-list"></i> Program</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-book-open"></i> Name</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-calendar-check"></i> Credit Hours</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-clock"></i> Contact Hours</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-list-ol"></i> Semester</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-check"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td style="text-align:center">
+                                            @(i + 1)
+                                            @{
+                                                var user = Context.Users.Where(c => c.Id.Equals(item.OfferedCourse.User)).FirstOrDefault();
+                                                if (user != null)
+                                                {
+                                                    if (string.IsNullOrEmpty(user.Image))
+                                                    {
+                                                        <img src="~/dist/img/user.png" class=" img-circle" height="40" width="40">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="@user.Image" class=" img-circle" height="40" width="40">
+                                                    }
+                                                }
+                                            }
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.OfferedCourse.Program.ProgramName
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.OfferedCourse.OfferedCourseTitle
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.OfferedCourse.OfferedCourseCreditHours
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.OfferedCourse.OfferedCourseContactHours
+                                        </td>
+                                        <td style="text-align:center">
+                                            @item.OfferedCourse.OfferedCourseSemesterNo - (@item.OfferedCourse.OfferedCourseSection)
+                                        </td>
+                                        <td class="project-actions text-right">
+
+                                            <button class="btn btn-outline-secondary btn-sm" onclick="this.disabled = true; LoadDetails(@item.OfferedCourseID);this.disabled=false;">
+                                                <i class="fas fa-folder">
+                                                </i>
+                                                View
+                                            </button>
+                                            <button class="btn btn-outline-success btn-sm" onclick="this.disabled = true; LoadAttendanceSummary(@item.RegisteredCourseID);this.disabled=false;">
+                                                <i class="fa fa-check">
+                                                </i>
+                                                Attendance
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    i += 1;
+                                }
+                            </tbody>
+                            <tfoot class="table-avatar" style="color:#656565;text-align:center">
+                                <tr>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-sort-numeric-up"></i> #</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-th-list"></i> Program</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-book-open"></i> Name</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-calendar-check"></i> Credit Hours</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-clock"></i> Contact Hours</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-list-ol"></i> Semester</th>
+                                    <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-check"></i> Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+
+<script>
+
+
+
+    window.onload = function () {
+        var el = document.getElementById("nav_courses");
+        el.classList.add("navbar-cyan");
+    }
+    function LoadDetails(ID) {
+        $("#edit").load("/Student/Courses/Details?ID=" + parseInt(ID),
+            function (response, status, xhr) {
+                if (status == "success") {
+                } else if (status == "error" || status == "timeout") {
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "notmodified") {
+                    // NOT MODIFIED request (likely cached) //
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "abort") {
+                    // ABORTED request //
+                    toastr.error('ABORTED request');
+                }
+            });
+    }
+    function LoadAttendanceSummary(ID) {
+        $("#edit").load("/Student/Courses/AttendanceSummary?Course=" + parseInt(ID),
+            function (response, status, xhr) {
+                if (status == "success") {
+                } else if (status == "error" || status == "timeout") {
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "notmodified") {
+                    // NOT MODIFIED request (likely cached) //
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "abort") {
+                    // ABORTED request //
+                    toastr.error('ABORTED request');
+                }
+            });
+    }
+    $(function () {
+
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: 'Registered Courses',
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: 'Registered Courses',
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Registered Courses',
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Registered Courses',
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Registered Courses',
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: 'Registered Courses',
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+</script>
+
+
+

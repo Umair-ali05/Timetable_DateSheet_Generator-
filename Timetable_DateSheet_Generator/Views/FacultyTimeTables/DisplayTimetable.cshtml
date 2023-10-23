@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewData["Title"] = "Timetables";
+    Layout = "~/Views/Shared/FacultyLayout.cshtml";
+}
+<body>
+    <section class="content-header">
+
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><i style="color:#17a2b8" class="fa fa-table"></i> Timetables</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="~/Faculty/Dashboard/View">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Timetables</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row" id="selection">
+
+                <div class="col-sm-4">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-sort-numeric-down" style="color:#17a2b8"></i></span>
+                        </div>
+                        <select id="semester" class="form-control" onchange="loadTimetable()" asp-items="ViewBag.Semesters">
+                            <option selected value="">Select Semester</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <div id="displayTimetable"></div>
+            @*<div class="row">
+                    <div class="col-sm-12" id="displayTimetable">
+
+                    </div>
+                </div>*@
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</body>
+
+<script>
+    document.onreadystatechange = function () {
+        var el = document.getElementById("nav_timetable");
+        el.classList.add("navbar-cyan");
+    }
+    function loadTimetable() {
+        var ls = document.getElementById("displayTimetable");
+        ls.innerHTML = "";
+        if (!$('#semester').val()) {
+        }
+        else {
+            $('#displayTimetable').append(
+                $('<div>').prop({
+                    id: 'loaders',
+                    innerHTML: '',
+                    className: 'loader'
+                })
+            );
+            ls.innerHTML += ' Please Wait..'
+            $("#displayTimetable").load("/Faculty/TimeTables/ShowTimetable?semester=" + $("#semester :selected").val(),
+                function (response, status, xhr) {
+                    if (status == "success") {
+                        //var el = document.getElementById("loaders");
+                        //el.style.display = "none";
+                    } else if (status == "error" || status == "timeout") {
+                        toastr.error('Sorry! An error has occurred. Please try again later');
+
+                    } else if (status == "notmodified") {
+                        // NOT MODIFIED request (likely cached) //
+                        toastr.error('Sorry! An error has occurred. Please try again later');
+
+                    } else if (status == "abort") {
+                        // ABORTED request //
+                        toastr.error('ABORTED request');
+                    }
+                }
+            );
+
+        }
+    }
+
+
+</script>

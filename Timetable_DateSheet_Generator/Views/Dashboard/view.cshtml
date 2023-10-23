@@ -1,0 +1,448 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="container-fluid">
+
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><i style="color:#17a2b8" class="fa fa-user"></i> Profile</h1>
+                    </div>                    
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <!-- Profile Image -->
+                        <div class="card card-cyan card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    @if (User != null)
+                                    {
+                                        @if (!string.IsNullOrEmpty(Model.profileView.Image))
+                                        {
+                                            <img class="profile-user-img img-fluid img-circle"
+                                                 src="@Model.profileView.Image"
+                                                 alt="User profile picture">
+                                        }
+                                        else
+                                        {
+                                            <img class="profile-user-img img-fluid img-circle"
+                                                 src="~/dist/img/user.png"
+                                                 alt="User profile picture">
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle"
+                                             src="~/dist/img/user.png"
+                                             alt="User profile picture">
+                                    }
+                                </div>
+                                <h3 class="profile-username text-center">@Model.profileView.Name</h3>
+                                <p class="text-muted text-center">Administrator</p>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b>Email</b> <a href="#" class="float-right">@Model.profileView.Email</a>
+                                    </li>
+                                </ul>
+                                <span class="btn btn-info btn-block" onclick="document.getElementById('pc').click();"><b>Upload Profile Picture</b></span>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                        <!-- About Me Box -->
+                        <div class="card card-cyan">
+                            <div class="card-header">
+                                <h3 class="card-title">About Me</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <strong><i style="color:#17a2b8" class="fas fa-book mr-1"></i> Education</strong>
+                                <p class="text-muted">
+                                    @Model.profileView.Experience
+                                </p>
+                                <hr>
+                                <strong><i style="color:#17a2b8" class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                                <p class="text-muted">@Model.profileView.Address</p>
+                                <hr>
+                                <strong><i style="color:#17a2b8" class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                                <p class="text-muted">
+                                    @Model.profileView.Skills
+                                </p>
+                                <hr>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item"><a id="act" class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
+                                    <li class="nav-item"><a id="pas" class="nav-link" href="#password" data-toggle="tab">Change Password</a></li>
+                                    <li class="nav-item"><a id="acc" class="nav-link" href="#account" data-toggle="tab">Update Account</a></li>
+                                    <li class="nav-item"><a id="pc" class="nav-link" href="#pic" data-toggle="tab">Upload Profile Picture</a></li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="activity">
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Branches Management</h3>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body p-0">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10px">#</th>
+                                                                <th>Task</th>
+                                                                <th>Progress</th>
+                                                                <th style="width: 40px">%</th>
+                                                                <th style="width: 40px">Total</th>
+                                                                <th style="width: 40px">Changes</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-university"></i> <a href="~/Administration/Institutes/Actions"> Institutes</a> </td>
+                                                                <td>
+                                                                    <div class="progress progress-xs">
+                                                                        <div class="progress-bar progress-bar-danger" style="width: @ViewBag.institutePer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-danger">@ViewBag.institutePer</span></td>
+                                                                <td><span class="badge bg-cyan">@Model.totalInstitutes</span></td>
+                                                                <td><span class="badge bg-olive">@Model.institutesCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-school"></i><a href="~/Administration/Buildings/Actions"> Buildings</a></td>
+
+
+                                                                <td>
+                                                                    <div class="progress progress-xs">
+                                                                        <div class="progress-bar bg-warning" style="width:@ViewBag.buildingPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-primary">@ViewBag.buildingPer</span></td>
+
+                                                                <td><span class="badge bg-maroon">@Model.totalBuilings</span></td>
+                                                                <td><span class="badge bg-fuchsia">@Model.buildingsCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                            <tr>
+                                                                <td>3.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-home"></i><a href="~/Administration/Rooms/Actions"> Rooms</a> </td>
+                                                                <td>
+                                                                    <div class="progress progress-xs progress-striped active">
+                                                                        <div class="progress-bar bg-success" style="width: @ViewBag.roomPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-fuchsia">@ViewBag.roomPer</span></td>
+                                                                <td><span class="badge bg-primary">@Model.totalRooms</span></td>
+                                                                <td><span class="badge bg-danger">@Model.roomsCreatedBy</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                            <!-- /.card -->
+                                            <!-- /.card -->
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Academic Management</h3>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body p-0">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10px">#</th>
+                                                                <th>Task</th>
+                                                                <th>Progress</th>
+                                                                <th style="width: 40px">%</th>
+                                                                <th style="width: 40px">Total</th>
+                                                                <th style="width: 40px">Changes</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-th-list"></i><a href="~/Administration/Departments/Actions"> Departments</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs">
+                                                                        <div class="progress-bar progress-bar-danger" style="width: @ViewBag.departmentPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-danger">@ViewBag.departmentPer</span></td>
+                                                                <td><span class="badge bg-cyan">@Model.totalDepartments</span></td>
+                                                                <td><span class="badge bg-olive">@Model.departmentsCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-graduation-cap"></i> <a href="~/Administration/Programs/Actions"> Programs</a></td>
+
+
+                                                                <td>
+                                                                    <div class="progress progress-xs">
+                                                                        <div class="progress-bar bg-warning" style="width:@ViewBag.programPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-primary">@ViewBag.programPer</span></td>
+
+                                                                <td><span class="badge bg-maroon">@Model.totalPrograms</span></td>
+                                                                <td><span class="badge bg-fuchsia">@Model.programsCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr></tr>
+                                                            <tr>
+                                                                <td>3.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-home"></i> <a href="~/Administration/Semesters/Actions"> Semesters</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs progress-striped active">
+                                                                        <div class="progress-bar bg-success" style="width: @ViewBag.semesterPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-fuchsia">@ViewBag.semesterPer</span></td>
+                                                                <td><span class="badge bg-primary">@Model.totalSemesters</span></td>
+                                                                <td><span class="badge bg-danger">@Model.semestersCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>4.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-chalkboard-teacher"></i> <a href="~/Administration/FacultyMembers/Actions"> Faculty Members</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs progress-striped active">
+                                                                        <div class="progress-bar bg-gradient-dark" style="width: @ViewBag.facultyPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-maroon">@ViewBag.facultyPer</span></td>
+                                                                <td><span class="badge bg-primary">@Model.totalFaculties</span></td>
+                                                                <td><span class="badge bg-danger">@Model.facultiesCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>5.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-user-graduate"></i> <a href="~/Administration/Students/Actions"> Students</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs progress-striped active">
+                                                                        <div class="progress-bar bg-gradient-cyan" style="width: @ViewBag.studentPer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-orange">@ViewBag.studentPer</span></td>
+                                                                <td><span class="badge bg-primary">@Model.totalStudents</span></td>
+                                                                <td><span class="badge bg-danger">@Model.studentsCreatedBy</span></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>6.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-book-open"></i> <a href="~/Administration/OfferedCourses/Actions"> Offered Courses</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs progress-striped active">
+                                                                        <div class="progress-bar bg-danger" style="width: @ViewBag.coursePer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-gradient-dark">@ViewBag.coursePer</span></td>
+                                                                <td><span class="badge bg-primary">@Model.totalOfferedCourses</span></td>
+                                                                <td><span class="badge bg-danger">@Model.offeredCoursesCreatedBy</span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                            <!-- /.card -->
+                                            <!-- /.card -->
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-title">Timetable Management</h3>
+                                                </div>
+                                                <!-- /.card-header -->
+                                                <div class="card-body p-0">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10px">#</th>
+                                                                <th>Task</th>
+                                                                <th>Progress</th>
+                                                                <th style="width: 40px">%</th>
+                                                                <th style="width: 40px">Total</th>
+                                                                <th style="width: 40px">Changes</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td><i style="color:#17a2b8" class="fa fa-table"></i><a href="~/Administration/TimeTables/Actions"> Timetables</a></td>
+                                                                <td>
+                                                                    <div class="progress progress-xs">
+                                                                        <div class="progress-bar progress-bar-danger" style="width: @ViewBag.TimetablePer"></div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><span class="badge bg-danger">@ViewBag.TimetablePer</span></td>
+                                                                <td><span class="badge bg-cyan">@Model.totalTimetables</span></td>
+                                                                <td><span class="badge bg-olive">@Model.timeTablesCreatedBy</span></td>
+                                                            </tr>
+                                                          
+                                                          
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- /.card-body -->
+                                            </div>
+                                            <!-- /.card -->
+                                            <!-- /.card -->
+                                        </div>
+                                        <!-- /.post -->
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="password">
+
+                                        <form asp-action="ChangePassword" method="post" class="form-horizontal">
+                                            <input type="hidden" asp-for="profileView.Id" />
+                                            <input type="hidden" asp-for="profileView.Name" />
+                                            <input type="hidden" asp-for="profileView.Email" />
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">New Password</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" asp-for="Password" class="form-control" required placeholder="New Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail" class="col-sm-2 col-form-label">Confirm New Passwrod</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" asp-for="ConfirmPassword" required class="form-control" placeholder="Confirm New Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="account">
+                                        <form asp-action="UpdateAccount" method="post" class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                                <div class="col-sm-10">
+                                                    <input type="hidden" asp-for="profileView.Id" />
+                                                    <input type="text" asp-for="profileView.Name" required class="form-control" id="inputName" placeholder="Name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" asp-for="profileView.Email" required class="form-control" id="inputEmail" placeholder="Email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputName2" class="col-sm-2 col-form-label">Address</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" asp-for="profileView.Address" class="form-control" id="inputName2" placeholder="Address">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputExperience" class="col-sm-2 col-form-label">Education/Experience</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control" asp-for="profileView.Experience" id="inputExperience" placeholder="Education/Experience"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" asp-for="profileView.Skills" class="form-control" id="inputSkills" placeholder="Skills">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="pic">                                        
+                                        <form asp-action="uploadPic" enctype="multipart/form-data" method="post" class="form-horizontal">
+                                            <input type="hidden" asp-for="profileView.Name" />
+                                            <input type="hidden" asp-for="profileView.Id" />
+                                            <input type="hidden" asp-for="profileView.Email" />
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">Upload Image</label>
+                                                <div class="col-sm-10">
+                                                    <input asp-for="image" accept="image/*" required class="form-control" id="inputName" placeholder="Upload Image">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+
+<script>
+    document.onreadystatechange = function () {
+        var el = document.getElementById("nav_dashboard");
+        el.classList.add("navbar-cyan");
+        if (document.readyState === 'complete') {
+        if ('@ViewBag.MessageType'.toLowerCase() == "success")
+            toastr.success('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.info('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "error")
+            toastr.error('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.warning('@ViewBag.Message');
+            else;
+
+            if ('@ViewBag.Action'.toLowerCase() == "pass")
+                document.getElementById('pas').click();
+            else if ('@ViewBag.Action'.toLowerCase() == "account")
+                document.getElementById('acc').click();
+            else if ('@ViewBag.Action'.toLowerCase() == "activity")
+                document.getElementById('act').click();
+                 else if ('@ViewBag.Action'.toLowerCase() == "pic")
+                document.getElementById('pc').click();
+            else;
+        }
+    }
+
+</script>
+

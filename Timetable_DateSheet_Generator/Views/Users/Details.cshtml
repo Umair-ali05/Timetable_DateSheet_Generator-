@@ -1,0 +1,60 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.RegisterViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Details" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Details"></div>
+<div class="modal fade" id="modal-lg_Details">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Administrator Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                           
+                                <div class="col-sm-3" style="padding-top:5%">
+                                    <h6><i style="color:#17a2b8" class="fa fa-user-secret"></i> Name</h6>
+                                    <p><i>@Model.Name</i></p>
+                                </div>
+                                <div class="col-sm-3" style="padding-top:5%">
+                                    <h6><i style="color:#17a2b8" class="fa fa-envelope"></i> Email</h6>
+                                    <p><i><a href="#">@Model.UserEmail</a></i></p>
+                                </div>
+                                <div class="col-sm-6">
+                                    @if (string.IsNullOrEmpty(Model.path))
+                                    {
+                                        <div style="text-align:center">
+                                            <img src="~/dist/img/user.png" class="img-circle" height="200" width="200" />
+                                        </div>
+                                    }
+                                    else
+                                    { <div style="text-align:center">
+                                            <img src="@Model.path" class="img-circle" height="200" width="200" />
+                                        </div>
+                                    }
+                                </div>                                
+                           
+                        </div>                        
+
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <script>
+        $(document).ready(function () {
+            document.getElementById('Click_Details').click();
+
+        });
+    </script>

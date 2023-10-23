@@ -1,0 +1,142 @@
+﻿@model Timetable_DateSheet_Generator.Models.TimeTables
+@{
+    ViewData["Title"] = "Timetables";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<body>
+    <section class="content-header">
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="~/Administration/TimeTables/Actions">Timetables</a></li>
+                    <li class="nav-item"><a class="nav-link" href="~/Administration/TimeTableSlots/Actions">Timetable TimeSlots</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1><i style="color:#17a2b8" class="fa fa-table"></i> Timetables (Program/Class Wise)</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="~/Administration/Dashboard/View">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Timetable Display</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <button class="btn btn-info " id="btn" onclick="roomWise()"><i class="fa fa-home"></i> Room Wise Datesheet</button>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row" id="selection">
+                        <div class="col-sm-4">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-th-list" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select id="deparment" class="form-control" onchange="loadPrograms(@Model.TimeTableID,@Model.InstituteID)" asp-items="ViewBag.Departments">
+                                    <option selected value="">Select Department</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-graduation-cap" style="color:#17a2b8"></i></span>
+                                </div>
+                                <select id="program" class="form-control" onchange="loadTimetable(@Model.TimeTableID)" asp-items="ViewBag.Programs">
+                                    <option selected value="">Select Program</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div id="displayTimetable"></div>
+            @*<div class="row">
+            <div class="col-sm-12" id="displayTimetable">
+
+            </div>
+        </div>*@
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+</body>
+
+<script>
+     function roomWise() {
+         window.location.href ="DisplayTimetable?Timetable="+@Model.TimeTableID;
+    }
+    function loadTimetable(Timetable) {
+        var ls = document.getElementById("displayTimetable");
+        ls.innerHTML = "";
+        if (!$('#program').val()) {
+        }
+        else {
+            $('#displayTimetable').append(
+                $('<div>').prop({
+                    id: 'loaders',
+                    innerHTML: '',
+                    className: 'loader'
+                })
+            );
+            ls.innerHTML += ' Please Wait..'
+            $("#displayTimetable").load("/Administration/TimeTables/ShowTimetableClassWise?program=" + $("#program :selected").val() + "&timetable=" + parseInt(Timetable),
+                function (response, status, xhr) {
+                    if (status == "success") {
+                        //var el = document.getElementById("loaders");
+                        //el.style.display = "none";
+                    } else if (status == "error" || status == "timeout") {
+                        toastr.error('Sorry! An error has occurred. Please try again later');
+
+                    } else if (status == "notmodified") {
+                        // NOT MODIFIED request (likely cached) //
+                        toastr.error('Sorry! An error has occurred. Please try again later');
+
+                    } else if (status == "abort") {
+                        // ABORTED request //
+                        toastr.error('ABORTED request');
+                    }
+                }
+            );
+
+        }
+    }   
+
+    function loadPrograms(Timetable,Institute) {
+        var options = [];
+
+        $.ajax({
+            type: "POST",
+            url: "/Administration/TimeTables/getPrograms?institute=" + parseInt(Institute) + "&department=" + $("#department :selected").val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                options.push('<option value=""> Select Program</option>')
+                for (var i = 0; i < Data.length; i++) {
+                    options.push('<option value="',
+                        Data[i].id, '">',
+                        Data[i].name, '</option>');
+                }
+                $("#room").html(options.join(''));
+            },
+            error: function () { }
+        });
+        loadTimetable(Timetable);
+    }
+    window.onload = function () {
+        var el = document.getElementById("nav_timetable");
+        el.classList.add("navbar-cyan");
+    }
+</script>

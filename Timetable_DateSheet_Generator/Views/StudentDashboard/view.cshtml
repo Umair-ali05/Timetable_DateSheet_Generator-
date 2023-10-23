@@ -1,0 +1,244 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/StudentLayout.cshtml";
+}
+
+<section class="content">
+    <div class="container-fluid">
+
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><i style="color:#17a2b8" class="fa fa-user"></i> Profile</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <!-- Profile Image -->
+                        <div class="card card-cyan card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    @if (User != null)
+                                    {
+                                        @if (!string.IsNullOrEmpty(Model.profileView.Image))
+                                        {
+                                            <img class="profile-user-img img-fluid img-circle"
+                                                 src="@Model.profileView.Image"
+                                                 alt="User profile picture">
+                                        }
+                                        else
+                                        {
+                                            <img class="profile-user-img img-fluid img-circle"
+                                                 src="~/dist/img/user.png"
+                                                 alt="User profile picture">
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle"
+                                             src="~/dist/img/user.png"
+                                             alt="User profile picture">
+                                    }
+                                </div>
+                                <h3 class="profile-username text-center">@Model.profileView.Name</h3>
+                                <p class="text-muted text-center">Student</p>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item">
+                                        <b>Email</b> <a href="#" class="float-right">@Model.profileView.Email</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Institute</b> <span class="float-right">@ViewBag.Institute</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Department</b> <span class="float-right">@ViewBag.Department</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <b>Program</b> <span class="float-right">@ViewBag.Program</span>
+                                    </li>
+                                </ul>
+                                <span class="btn btn-info btn-block" onclick="document.getElementById('pc').click();"><b>Upload Profile Picture</b></span>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                        <!-- About Me Box -->
+                        <div class="card card-cyan">
+                            <div class="card-header">
+                                <h3 class="card-title">About Me</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <strong><i style="color:#17a2b8" class="fas fa-book mr-1"></i> Education</strong>
+                                <p class="text-muted">
+                                    @Model.profileView.Experience
+                                </p>
+                                <hr>
+                                <strong><i style="color:#17a2b8" class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                                <p class="text-muted">@Model.profileView.Address</p>
+                                <hr>
+                                <strong><i style="color:#17a2b8" class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                                <p class="text-muted">
+                                    @Model.profileView.Skills
+                                </p>
+                                <hr>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+
+                                    <li class="nav-item"><a id="acc" class="nav-link active" href="#account" data-toggle="tab">Update Account</a></li>
+                                    <li class="nav-item"><a id="pas" class="nav-link" href="#password" data-toggle="tab">Change Password</a></li>
+                                    <li class="nav-item"><a id="pc" class="nav-link" href="#pic" data-toggle="tab">Upload Profile Picture</a></li>
+                                </ul>
+                            </div><!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="tab-content">
+
+                                    <!-- /.tab-pane -->
+
+                                    <div class="tab-pane" id="password">
+
+                                        <form asp-action="ChangePassword" method="post" class="form-horizontal">
+                                            <input type="hidden" asp-for="profileView.Id" />
+                                            <input type="hidden" asp-for="profileView.Name" />
+                                            <input type="hidden" asp-for="profileView.Email" />
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">New Password</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" asp-for="Password" class="form-control" required placeholder="New Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail" class="col-sm-2 col-form-label">Confirm New Passwrod</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" asp-for="ConfirmPassword" required class="form-control" placeholder="Confirm New Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="active tab-pane" id="account">
+                                        <form asp-action="UpdateAccount" method="post" class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                                <div class="col-sm-10">
+                                                    <input type="hidden" asp-for="profileView.Id" />
+                                                    <input type="text" asp-for="profileView.Name" required class="form-control" id="inputName" placeholder="Name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" asp-for="profileView.Email" required class="form-control" id="inputEmail" placeholder="Email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputName2" class="col-sm-2 col-form-label">Address</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" asp-for="profileView.Address" class="form-control" id="inputName2" placeholder="Address">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputExperience" class="col-sm-2 col-form-label">Education/Experience</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control" asp-for="profileView.Experience" id="inputExperience" placeholder="Education/Experience"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" asp-for="profileView.Skills" class="form-control" id="inputSkills" placeholder="Skills">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane" id="pic">
+                                        <form asp-action="uploadPic" enctype="multipart/form-data" method="post" class="form-horizontal">
+                                            <input type="hidden" asp-for="profileView.Name" />
+                                            <input type="hidden" asp-for="profileView.Id" />
+                                            <input type="hidden" asp-for="profileView.Email" />
+                                            <div class="form-group row">
+                                                <label for="inputName" class="col-sm-2 col-form-label">Upload Image</label>
+                                                <div class="col-sm-10">
+                                                    <input asp-for="image" accept="image/*" required class="form-control" id="inputName" placeholder="Upload Image">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="offset-sm-2 col-sm-10">
+                                                    <button type="submit" class="btn btn-danger">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div><!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+
+<script>
+    document.onreadystatechange = function () {
+        var el = document.getElementById("nav_dashboard");
+        el.classList.add("navbar-cyan");
+        if (document.readyState === 'complete') {
+        if ('@ViewBag.MessageType'.toLowerCase() == "success")
+            toastr.success('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.info('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "error")
+            toastr.error('@ViewBag.Message');
+        else if ('@ViewBag.MessageType'.toLowerCase() == "info")
+            toastr.warning('@ViewBag.Message');
+            else;
+
+            if ('@ViewBag.Action'.toLowerCase() == "pass")
+                document.getElementById('pas').click();
+            else if ('@ViewBag.Action'.toLowerCase() == "account")
+                document.getElementById('acc').click();
+            else if ('@ViewBag.Action'.toLowerCase() == "activity")
+                document.getElementById('act').click();
+                 else if ('@ViewBag.Action'.toLowerCase() == "pic")
+                document.getElementById('pc').click();
+            else;
+        }
+    }
+
+</script>
+

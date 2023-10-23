@@ -1,0 +1,141 @@
+﻿
+
+
+<div style="display:none" id="Click_Create" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Create"></div>
+<div class="modal fade" id="modal-lg_Create">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="text-danger">@ViewBag.Message</div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="input-group mb-6">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-university" style="color:#17a2b8"></i></span>
+                            </div>
+                            <select class="form-control" id="institute" asp-items="ViewBag.Institutes" onchange="loadDepartments()">
+                                <option selected value="">Select Institute</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-school" style="color:#17a2b8"></i></span>
+                            </div>
+                            <select id="department" asp-items="ViewBag.Departments" onchange="loadPrograms()" class="form-control">
+                                <option selected value="">Select Department</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-graduation-cap" style="color:#17a2b8"></i></span>
+                            </div>
+                            <select id="program" class="form-control" onchange="loadTimings()" asp-items="ViewBag.Programs" required>
+                                <option selected value="">Select Program</option>
+                            </select>
+                        </div>
+                    </div>                  
+                    <div id="loadTimings" class="col-sm-12">
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+<script>
+    function loadTimings() {
+        var ls = document.getElementById("loadTimings");
+        ls.innerHTML = "";
+        $('#loadTimings').append(
+            $('<div>').prop({
+                id: 'loaders',
+                innerHTML: '',
+                className: 'loader'
+            })
+        );
+        ls.innerHTML+=' Please Wait..'
+        $("#loadTimings").load("/Administration/ProgramRegularTimings/LoadTimings?ProgramID=" + $("#program :selected").val(),
+            function (response, status, xhr) {
+                document.getElementById('crtBtn').disabled = false;
+                if (status == "success") {
+                    var el = document.getElementById("loaders");
+                    el.style.display = "none";
+                } else if (status == "error" || status == "timeout") {
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "notmodified") {
+                    // NOT MODIFIED request (likely cached) //
+                    toastr.error('Sorry! An error has occurred. Please try again later');
+
+                } else if (status == "abort") {
+                    // ABORTED request //
+                    toastr.error('ABORTED request');
+                }
+            }
+        );
+    }
+    function loadDepartments() {
+        var options = [];
+
+        $.ajax({
+            type: "POST",
+            url: "/Administration/ProgramRegularTimings/getDepartments?institute=" + $("#institute :selected").val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                options.push('<option value=""> Select Department</option>')
+                for (var i = 0; i < Data.length; i++) {
+                    options.push('<option value="',
+                        Data[i].id, '">',
+                        Data[i].name, '</option>');
+                }
+                $("#department").html(options.join(''));
+            },
+            error: function () { }
+        });
+        loadPrograms();        
+    }
+
+    function loadPrograms() {
+        var options = [];
+
+        $.ajax({
+            type: "POST",
+            url: "/Administration/ProgramRegularTimings/getPrograms?institute=" + $("#institute :selected").val() + "&department=" + $("#department :selected").val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (Data) {
+                options.push('<option value=""> Select Program</option>')
+                for (var i = 0; i < Data.length; i++) {
+                    options.push('<option value="',
+                        Data[i].id, '">',
+                        Data[i].name, '</option>');
+                }
+                $("#program").html(options.join(''));
+            },
+            error: function () { }
+        });
+    }
+   
+    $(document).ready(function () {
+
+        document.getElementById('Click_Create').click();
+    });
+</script>
+

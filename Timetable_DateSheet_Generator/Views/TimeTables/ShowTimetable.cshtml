@@ -1,0 +1,686 @@
+﻿@model IEnumerable<Timetable_DateSheet_Generator.Models.ViewModels.TimetableDisplay>
+@using Microsoft.AspNetCore.Identity;
+@using Timetable_DateSheet_Generator.Data.DbContext;
+@inject SignInManager<ApplicationUser> signInManager
+@inject Timetable_DateSheet_Context Context
+
+<head>
+    <style>
+
+
+        .CourseSlotDisplay {
+            width: 25px;
+            display: inline-block;
+            height: 25px;
+            border: solid;
+            border-width: 0.01px;
+            border-color: white;
+            border-radius: 25px;
+            padding-top: 6px;
+            text-align: center;
+            margin: 6px;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <button  class="btn btn-danger float-right" id="printBtn" onclick="change(true); window.print();"><i class="fa fa-file"></i> Print/Download</button>
+                    </div>
+                    <!-- /.card-header -->
+                    @if (ViewBag.Room != null)
+                    {
+                        <div class="card-body">
+                            <table id="example2" class="table table-bordered ">
+                                <thead class="table-avatar" style="color:#656565;text-align:center">
+                                    <tr>
+                                        <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-university"></i> Institute</th>
+                                        <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-school"></i> Building </th>
+                                        <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-home"></i> Room</th>
+                                        <th style="font-weight:400"><i style="color:#17a2b8" class="fa fa-chair"></i> Seating Capacity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align:center">@ViewBag.Room.Building.Institute.InstituteName</td>
+                                        <td style="text-align:center">@ViewBag.Room.Building.BuildingName</td>
+                                        <td style="text-align:center">@ViewBag.Room.RoomName (@Enum.GetName(typeof(Rooms.RoomTypes), ViewBag.Room.RoomType))</td>
+                                        <td style="text-align:center">@ViewBag.Room.SeatingCapacity</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if(Model.Count()<=0)
+                    {
+                        <div class="card-header">
+                            <h6 class="card-title">Timetable Not Found!.</h6>
+                        </div>
+                    }
+                    <!-- /.card-body -->
+                </div>
+                @{
+                    int t = 0;
+                }
+                @foreach (var Class in Model)
+                {
+
+                    <div class="card">
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="example2" class="table table-bordered ">
+                                <thead class="table-avatar" style="color:#656565;text-align:center">
+                                    <tr>
+                                        <th style="background-color:cadetblue;padding:5px;color:white;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;font-size:9px">Time/Day</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Monday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Tuesday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Wednesday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Thursday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Friday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Saturday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Sunday</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var time in ViewBag.Times)
+                                    {
+                                        <tr id="@Class.Number @time.StartTime">
+                                            <td id="@t @i" style="background-color:cadetblue;color:floralwhite;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;font-size:9px">@time.getTime(@time.StartTime) to @time.getTime(@time.FinishTime - 1)</td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                            <td style="padding:5px;font-size:9px;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;"></td>
+                                        </tr>
+                                        i += 1;
+                                    }
+                                </tbody>
+                                <tfoot class="table-avatar" style="color:#656565;text-align:center">
+                                    <tr>
+                                        <th style="background-color:cadetblue;padding:5px;color:white;border:solid;border-width:0.01px;border-color:#e1e1dd;border-collapse:collapse;font-size:9px">Time/Day</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Monday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Tuesday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Wednesday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Thursday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Friday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Saturday</th>
+                                        <th style="font-size:9px;background-color:white;color:#808080">Sunday</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    t += 1;
+                }
+            </div>
+
+        </div>
+    </div>
+</section>
+<div>
+
+</div>
+<script src="~/plugins/jquery/tableHTMLExport.js"></script>
+<script>
+
+    function showSlots() {
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.SundayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(7);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(7);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                 var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '7';
+                    @:var cell = document.getElementById(cell1.id);
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "#999999";
+               if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+                 {
+                     Colors color= new Colors();
+                     color.Color= Common._random.Next(0,34);
+                     color.CourseID=Course.OfferedCourseID;
+                     Common.Colors.Add(color);
+                 }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+                @:cell.style.backgroundColor = tableColors[rand];
+                @:cell.style.fontSize = "12px";
+                @:cell.style.color="white";
+
+            @:cell.style.textOverflow = "ellpise";
+        if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.SaturdayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(6);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(6);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                 var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title="Course: "+Course.OfferedCourse.OfferedCourseTitle+" Room: "+Course.Room.RoomName+"-"+Course.Room.Building.BuildingName+"Time: "+Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)+" to "+lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)+" Teacher:"+user.Name + " Class:"+Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '6';
+                @:var cell = document.getElementById(cell1.id);
+               if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+                 {
+                     Colors color= new Colors();
+                     color.Color= Common._random.Next(0,34);
+                     color.CourseID=Course.OfferedCourseID;
+                     Common.Colors.Add(color);
+                 }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+            @:cell.style.backgroundColor = tableColors[rand];
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "#999999";
+
+            @:cell.style.fontSize = "12px";
+                @:cell.style.color="white";
+                @:cell1.textAlign = "centre";
+        if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.FridayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(5);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(5);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                 var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '5';
+              @:var cell = document.getElementById(cell1.id);
+               if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+                 {
+                     Colors color= new Colors();
+                     color.Color= Common._random.Next(0,34);
+                     color.CourseID=Course.OfferedCourseID;
+                     Common.Colors.Add(color);
+                 }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+            @:cell.style.backgroundColor = tableColors[rand];
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+
+                @:cell.style.borderColor = "#999999";
+                @:cell.style.fontSize = "12px";
+                @:cell.style.color="white";
+                @:cell1.textAlign = "centre";
+       if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.ThursdayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(4);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(4);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                 var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '4';
+                    @:var cell = document.getElementById(cell1.id);
+               if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+                 {
+                     Colors color= new Colors();
+                     color.Color= Common._random.Next(0,34);
+                     color.CourseID=Course.OfferedCourseID;
+                     Common.Colors.Add(color);
+                 }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+            @:cell.style.backgroundColor = tableColors[rand];
+                @:cell.style.fontSize = "12px";
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+            @:cell.style.borderColor = "#999999";
+
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "white";
+                @:cell.style.color="white";
+                @:cell1.textAlign = "centre";
+      if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.WednesdayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(3);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(3);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                 var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '3';
+            @:var cell = document.getElementById(cell1.id);
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "#999999";
+               if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+                 {
+                     Colors color= new Colors();
+                     color.Color= Common._random.Next(0,34);
+                     color.CourseID=Course.OfferedCourseID;
+                     Common.Colors.Add(color);
+                 }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+                @:cell.style.backgroundColor = tableColors[rand];
+                @:cell.style.fontSize = "12px";
+                @:cell.style.color = "white";
+
+                @:cell1.textAlign = "centre";
+       if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+        @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.TuesdayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(2);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(2);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '2';
+                    @:var cell = document.getElementById(cell1.id);
+               @if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+               {
+                   Colors color= new Colors();
+                   color.Color= Common._random.Next(0,34);
+                   color.CourseID=Course.OfferedCourseID;
+                   Common.Colors.Add(color);
+               }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+                @:cell.style.backgroundColor = tableColors[rand];
+            @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "#999999";
+                @:cell.style.fontSize = "12px";
+
+                @:cell.style.color="white";
+                @:cell1.textAlign = "centre";
+       if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+        @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.MondayCourseTimeSlots)
+             {
+                foreach(var slot in slots)
+                {
+
+                     @:var row = document.getElementById('@Class.Number @slot.TimeSlots.Time.StartTime');
+                   @:row.deleteCell(1);
+               }
+              @:var Cells = document.createElement('td');
+               var Course = slots.ElementAt(0);
+               @:row = document.getElementById('@Class.Number @Course.TimeSlots.Time.StartTime');
+               @:var cell1 = row.insertCell(1);
+               var lastSlot = slots.ElementAt(slots.Count - 1);
+                var user = Context.Users.Where(c => c.Id.Equals(Course.OfferedCourse.FacultyMember.UserID)).FirstOrDefault();
+               @:cell1.innerHTML = '<i class="fa fa-book-open CourseSlotDisplay"></i>' + '@Course.OfferedCourse.getClassTitle()' + '</br><i class="far fa-clock CourseSlotDisplay"></i>' + '@Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime)' + ' to @lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1)</br><i class="fa fa-home CourseSlotDisplay"></i>' + '@Course.Room.RoomName' + '-@Course.Room.Building.BuildingName</br><i class="fa fa-graduation-cap CourseSlotDisplay"></i>@Course.OfferedCourse.Class()' +'</br><i class="fa fa-chalkboard-teacher CourseSlotDisplay"></i>@user.Name';
+               var title = "Course: " + Course.OfferedCourse.OfferedCourseTitle + " Room: " + Course.Room.RoomName + "-" + Course.Room.Building.BuildingName + "Time: " + Course.TimeSlots.Time.getTime(Course.TimeSlots.Time.StartTime) + " to " + lastSlot.TimeSlots.Time.getTime(lastSlot.TimeSlots.Time.FinishTime-1) + " Teacher:" + user.Name + " Class:" + Course.OfferedCourse.Class();
+               @:cell1.title = '@title';
+               @:cell1.rowSpan =@slots.Count;
+               @:cell1.borderRadius = "8px";
+                @:cell1.id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '1';
+                @:var cell = document.getElementById(cell1.id);
+               @if(!Common.Colors.Any(c=>c.CourseID==Course.OfferedCourseID))
+               {
+                   Colors color= new Colors();
+                   color.Color= Common._random.Next(0,34);
+                   color.CourseID=Course.OfferedCourseID;
+                   Common.Colors.Add(color);
+               }
+               @:var rand = @Common.Colors.FirstOrDefault(c=>c.CourseID==Course.OfferedCourseID).Color;
+                @:cell.style.backgroundColor = tableColors[rand];
+                @:cell.style.fontSize = "12px";
+                @:cell.style.border = "solid";
+                @:cell.style.borderWidth = "0.1px";
+                @:cell.style.borderCollapse = "collapse";
+                @:cell.style.borderColor = "#999999";
+                @:cell.style.color = "white";
+                @:cell1.textAlign = "centre";
+        if(slots.Count>4)
+                {
+                    @:var div=@slots.Count-4;
+                    @:var value = div * 17.5;
+                    @:var pad = value.toString() + "px 0";
+                    @:cell1.style.padding = pad;
+                }
+             }
+        }
+
+
+
+    }
+        function EnableTableOptions() {
+            var s = document.getElementById();
+        $("#example2").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false, "searching": false, "paging": false, "info": false,
+            "buttons": [
+                {
+                    extend: 'copy',
+                    title: 'Users',
+                    text: window.copyButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+                {
+                    extend: 'csv',
+                    title: 'Users',
+                    text: window.csvButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+                {
+                    extend: 'excel',
+                    title: 'Users',
+                    text: window.excelButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    title: 'Users',
+                    text: window.pdfButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+                {
+                    extend: 'print',
+                    title: 'Users',
+                    text: window.printButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+                {
+                    extend: 'colvis',
+                    title: 'Users',
+                    text: window.colvisButtonTrans,
+                    exportOptions: {
+                        columns: [0, 1, 2]
+                    }
+                },
+            ]
+        }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+    }
+
+    $(document).ready(function () {
+        showSlots();
+        //EnableTableOptions();
+    });
+
+     function hide() {        
+        var btn = document.getElementById("printBtn");
+         btn.style.display = "none";
+         document.getElementById("btn").style.display = "none";
+        var sel = document.getElementById("selection");
+        sel.style.display = "none";
+    }
+    function show() {
+        var btn = document.getElementById("printBtn");
+        btn.style.display = "block";
+        document.getElementById("btn").style.display = "block";
+        var sel = document.getElementById("selection");
+        sel.style.display = "inline";
+    }
+    function change(value) {
+        var color = "";
+        if (value) {
+            color = "#999999";
+            hide();
+        }
+        else {
+            color = "white";
+            show();
+        }            
+        var TimesCount =@ViewBag.Times.Count;
+        var modelCount =@Model.Count();
+        for (var i = 0; i < modelCount; i++) {
+            for (var t = 0; t < TimesCount; t++) {
+                var id = i.toString() + " " + t.toString();
+                var el = document.getElementById(id);
+                el.style.color = color;
+            }
+        }
+        @*@for(int i=0;i<Model.Count();i++)
+        {
+            int s=0;
+            foreach(var item in ViewBag.Times)
+            {
+                @:document.getElementById(i.toString() + " " + s.toString()).style.color = color;
+        s++;
+                }
+        }*@
+         @foreach(var Class in Model)
+         {
+
+             foreach(var slots in Class.MondayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '1';
+                @:var cell = document.getElementById(id);
+        @:cell.style.color = color;        
+             }
+
+        }
+
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.TuesdayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '2';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.WednesdayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '3';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.ThursdayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '4';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.FridayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '5';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.SaturdayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '6';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+         @foreach(var Class in Model)
+         {
+             foreach(var slots in Class.SundayCourseTimeSlots)
+             {
+
+               var Course = slots.ElementAt(0);
+
+                @:var id = '@Class.Number @Course.TimeSlots.Time.StartTime' + '7';
+                @:var cell = document.getElementById(id);
+                @:cell.style.color = color;
+             }
+        }
+    }
+    (function () {
+
+        var afterPrint = function () {
+            change(false);
+        };
+
+        window.onafterprint = afterPrint;
+
+    }());
+</script>

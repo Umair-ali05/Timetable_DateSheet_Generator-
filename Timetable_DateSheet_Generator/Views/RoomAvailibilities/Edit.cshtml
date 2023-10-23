@@ -1,0 +1,256 @@
+﻿<head>
+    <link href="~/css/CustomCSS.css" rel="stylesheet" />
+</head>
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Timetable_DateSheet_Generator.Models.ViewModels.TimingList
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div id="Success" class="Message" style="margin:1%">
+        <span class="fas fa-check"></span>
+        Mark and select timings for room.
+    </div>
+    <br />
+    <hr />
+    <div class="group" style="display:none;" id="day1">
+        <div class="custom_Form-item" id=1>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Monday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="MondaySlot" type="checkbox" onchange="checkAll('Monday_Slot','@Model.MondaySlots.Is_Hour_Slots.Count','MondaySlot')" asp-for="MondaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="MondayStart" onchange="changeValue('MondayStart','@Model.MondaySlots.Is_Hour_Slots.Count','MondayStart')" class="selectAll" asp-for="MondaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="MondayEnd" onchange="changeValue('MondayEnd','@Model.MondaySlots.Is_Hour_Slots.Count','MondayEnd')" class="selectAll" asp-for="MondaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.MondaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.MondaySlots.hoursLabels[Model.MondaySlots.Hours[i]]
+                <input id="@i Monday_Slot" type="checkbox" asp-for="MondaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="MondaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i MondayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="MondaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i MondayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="MondaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day2">
+        <div class="custom_Form-item" id=2>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Tuesday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="TuesdaySlot" onchange="checkAll('TuesdaySlot','@Model.TuesdaySlots.Is_Hour_Slots.Count','TuesdaySlot')" type="checkbox" asp-for="TuesdaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="TuesdayStart" onchange="changeValue('TuesdayStart','@Model.TuesdaySlots.Is_Hour_Slots.Count','TuesdayStart')" class="selectAll" asp-for="TuesdaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="TuesdayEnd" onchange="changeValue('TuesdayEnd','@Model.TuesdaySlots.Is_Hour_Slots.Count','TuesdayEnd')" class="selectAll" asp-for="TuesdaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.TuesdaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.TuesdaySlots.hoursLabels[Model.TuesdaySlots.Hours[i]]
+                <input id="@i TuesdaySlot" type="checkbox" asp-for="TuesdaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="TuesdaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i TuesdayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="TuesdaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i TuesdayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="TuesdaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day3">
+        <div class="custom_Form-item" id=3>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Wednesday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="WednesdaySlot" onchange="checkAll('WednesdaySlot','@Model.WednesdaySlots.Is_Hour_Slots.Count','WednesdaySlot')" type="checkbox" asp-for="WednesdaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="WednesdayStart" onchange="changeValue('WednesdayStart','@Model.WednesdaySlots.Is_Hour_Slots.Count','WednesdayStart')" class="selectAll" asp-for="WednesdaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="WednesdayEnd" onchange="changeValue('WednesdayEnd','@Model.WednesdaySlots.Is_Hour_Slots.Count','WednesdayEnd')" class="selectAll" asp-for="WednesdaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.WednesdaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.WednesdaySlots.hoursLabels[Model.WednesdaySlots.Hours[i]]
+                <input id="@i WednesdaySlot" type="checkbox" asp-for="WednesdaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="WednesdaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i WednesdayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="WednesdaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i WednesdayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="WednesdaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day4">
+        <div class="custom_Form-item" id=4>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Thursday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="ThursdaySlot" onchange="checkAll('ThursdaySlot','@Model.ThursdaySlots.Is_Hour_Slots.Count','ThursdaySlot')" type="checkbox" asp-for="ThursdaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="ThursdayStart" onchange="changeValue('ThursdayStart','@Model.ThursdaySlots.Is_Hour_Slots.Count','ThursdayStart')" class="selectAll" asp-for="ThursdaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="ThursdayEnd" onchange="changeValue('ThursdayEnd','@Model.ThursdaySlots.Is_Hour_Slots.Count','ThursdayEnd')" class="selectAll" asp-for="ThursdaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.ThursdaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.ThursdaySlots.hoursLabels[Model.ThursdaySlots.Hours[i]]
+                <input id="@i ThursdaySlot" type="checkbox" asp-for="ThursdaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="ThursdaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i ThursdayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="ThursdaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i ThursdayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="ThursdaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day5">
+        <div class="custom_Form-item" id=5>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Friday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="FridaySlot" onchange="checkAll('FridaySlot','@Model.FridaySlots.Is_Hour_Slots.Count','FridaySlot')" type="checkbox" asp-for="FridaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="FridayStart" onchange="changeValue('FridayStart','@Model.FridaySlots.Is_Hour_Slots.Count','FridayStart')" class="selectAll" asp-for="FridaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="FridayEnd" onchange="changeValue('FridayEnd','@Model.FridaySlots.Is_Hour_Slots.Count','FridayEnd')" class="selectAll" asp-for="FridaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.FridaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.FridaySlots.hoursLabels[Model.FridaySlots.Hours[i]]
+                <input id="@i FridaySlot" type="checkbox" asp-for="FridaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="FridaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i FridayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="FridaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i FridayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="FridaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day6">
+        <div class="custom_Form-item" id=6>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Saturday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="SaturdaySlot" onchange="checkAll('SaturdaySlot','@Model.SaturdaySlots.Is_Hour_Slots.Count','SaturdaySlot')" type="checkbox" asp-for="SaturdaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="SaturdayStart" onchange="changeValue('SaturdayStart','@Model.SaturdaySlots.Is_Hour_Slots.Count','SaturdayStart')" class="selectAll" asp-for="SaturdaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="SaturdayEnd" onchange="changeValue('SaturdayEnd','@Model.SaturdaySlots.Is_Hour_Slots.Count','SaturdayEnd')" class="selectAll" asp-for="SaturdaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.SaturdaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.SaturdaySlots.hoursLabels[Model.SaturdaySlots.Hours[i]]
+                <input id="@i SaturdaySlot" type="checkbox" asp-for="SaturdaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="SaturdaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i SaturdayStart" class="selectSlots" data-toggle="tooltip" title="Hour Start Time Slot" asp-for="SaturdaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i SaturdayEnd" class="selectSlots" data-toggle="tooltip" title="Hour End Time Slot" asp-for="SaturdaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <div class="group" style="display:none;" id="day7">
+        <div class="custom_Form-item" id=7>
+            <span class="far fa-calendar fa-fw"></span>
+        </div>
+        <label class="label label_For_textBox">Sunday</label>
+        <label class="checkBox_container" style="float:right">
+            Select All
+            <input id="SundaySlot" onchange="checkAll('SundaySlot','@Model.SundaySlots.Is_Hour_Slots.Count','SundaySlot')" type="checkbox" asp-for="SundaySlots.Is_Day_Slot" value="false">
+            <span class="checkmark"></span>
+            <select id="SundayStart" onchange="changeValue('SundayStart','@Model.SundaySlots.Is_Hour_Slots.Count','SundayStart')" class="selectAll" asp-for="SundaySlots.Day_Start_Slots" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+            <select id="SundayEnd" onchange="changeValue('SundayEnd','@Model.SundaySlots.Is_Hour_Slots.Count','SundayEnd')" class="selectAll" asp-for="SundaySlots.Day_End_Slots" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+        </label>
+        <hr />
+        <br />
+        @for (int i = 0; i < Model.SundaySlots.Is_Hour_Slots.Count; i++)
+        {
+            <label class="checkBox_container">
+                @Model.SundaySlots.hoursLabels[Model.SundaySlots.Hours[i]]
+                <input id="@i SundaySlot" type="checkbox" asp-for="SundaySlots.Is_Hour_Slots[i]">
+                <input type="hidden" asp-for="SundaySlots.Hours[i]" />
+                <span class="checkmark"></span>
+                <select id="@i SundayStart" class="selectSlots" ; data-toggle="tooltip" title="Hour Start Time Slot" asp-for="SundaySlots.Hour_Start_Slots[i]" asp-items="Html.GetEnumSelectList<Times.HourSubSlots>()"></select>
+                <select id="@i SundayEnd" class="selectSlots" ; data-toggle="tooltip" title="Hour End Time Slot" asp-for="SundaySlots.Hour_End_Slots[i]" asp-items="@(Html.GetEnumSelectList<Times.HourSubSlots>())"></select>
+            </label>
+        }
+        <hr />
+    </div>
+    <br />
+    <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-info"><i class="fa fa-sync"></i> Update Record</button>
+    </div>
+</form>
+<script>
+
+
+    function checkAll(slot, length,all) {
+        var value = document.getElementById(all).checked;
+        for(var hour = 0; hour < length; hour++) {
+            var hour_id = hour + " " + slot;
+            document.getElementById(hour_id).checked = value;
+        }
+    }
+    function changeValue(slot,length,all) {
+        var value = document.getElementById(all).selectedIndex;
+        for (var hour = 0; hour < length; hour++) {
+            var hour_id = hour + " " + slot;
+            document.getElementById(hour_id).selectedIndex = value;
+        }
+    }
+    function show() {
+        var day1 = document.getElementById("day1");
+        var day2 = document.getElementById("day2");
+        var day3 = document.getElementById("day3");
+        var day4 = document.getElementById("day4");
+        var day5 = document.getElementById("day5");
+        var day6 = document.getElementById("day6");
+        var day7 = document.getElementById("day7");
+        if (@Model.MondaySlots.Is_Hour_Slots.Count> 0)
+            day1.style.display = "block";
+        if (@Model.TuesdaySlots.Is_Hour_Slots.Count> 0)
+            day2.style.display = "block";
+        if (@Model.WednesdaySlots.Is_Hour_Slots.Count> 0)
+            day3.style.display = "block";
+        if (@Model.ThursdaySlots.Is_Hour_Slots.Count> 0)
+            day4.style.display = "block";
+        if (@Model.FridaySlots.Is_Hour_Slots.Count> 0)
+            day5.style.display = "block";
+        if (@Model.SaturdaySlots.Is_Hour_Slots.Count> 0)
+            day6.style.display = "block";
+        if (@Model.SundaySlots.Is_Hour_Slots.Count> 0)
+            day7.style.display = "block";
+    }
+    $(document).ready(function () {
+        show();
+    });
+</script>

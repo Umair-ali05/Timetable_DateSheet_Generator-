@@ -1,0 +1,79 @@
+﻿@model Timetable_DateSheet_Generator.Models.Attendance
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Details" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Details"></div>
+<div class="modal fade" id="modal-lg_Details">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Attendance Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-8">
+
+                        <div class="row">
+                            <div class="col-sm-6" style="padding-top:30%;">
+                                <h5 style="text-align:center"><i style="color:#17a2b8" class="fa fa-book"></i> Course</h5>
+                                <p style="text-align:center;"><i>@Model.OfferedCourse.OfferedCourseTitle</i></p>
+                            </div>
+                            <div class="col-sm-6" style="padding-top:30%;">
+                                <h5 style="text-align:center"><i style="color:#17a2b8" class="fa fa-calendar"></i> Date</h5>
+                                <p style="text-align:center;"><i>@Model.AttendanceDate.ToString("hh/MMM/yyy hh:ss tt"))</i></p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <h6>Modified By</h6>
+                        <small><i>@Model.Last_Modified.ToString("dd/MMM/yyy hh:mm:ss tt")</i></small>
+                        <div class="card card-cyan card-outline" style="background-color:#F5F5F5">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+
+                                    @if (!string.IsNullOrEmpty(ViewBag.Pic))
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle"
+                                             src="@ViewBag.Pic"
+                                             alt="User profile picture">
+                                    }
+                                    else
+                                    {
+                                        <img class="profile-user-img img-fluid img-circle"
+                                             src="~/dist/img/user.png"
+                                             alt="User profile picture">
+                                    }
+                                </div>
+                                <h3 class="profile-username text-center">@ViewBag.Name</h3>
+                                <p class="text-muted text-center">Administrator</p>
+                                <ul class="list-group list-group-unbordered mb-3">
+                                    <li class="list-group-item" style="background-color:#F5F5F5">
+                                        <span class="text-muted">Email</span><small><i> <a href="#" class="float-right">@ViewBag.Email</a></i></small>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    $(document).ready(function () {
+
+        document.getElementById('Click_Details').click();
+
+    });
+

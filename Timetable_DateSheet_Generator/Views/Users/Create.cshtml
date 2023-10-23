@@ -1,0 +1,100 @@
+﻿@model Timetable_DateSheet_Generator.Models.ViewModels.RegisterViewModel
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<div style="display:none" id="Click_Create" class="=btn btn-primary" data-toggle="modal" data-target="#modal-lg_Create"></div>
+<div class="modal fade" id="modal-lg_Create">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Record</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="Create" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+
+                    <div class="text-danger">@ViewBag.Message</div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-user-secret" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="text" class="form-control" asp-for="Name" required placeholder="Name" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="email" class="form-control" asp-for="UserEmail" required placeholder="Email" />
+                                <span asp-validation-for="UserEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="password" class="form-control" asp-for="Password" required placeholder="Password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-key" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input type="password" class="form-control" asp-for="ConfirmPassword" required placeholder="Confirm Password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-file" style="color:#17a2b8"></i></span>
+                                </div>
+                                <input  class="form-control" accept="image/*" asp-for="Image" placeholder="Upload Picture" />                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <img src="" width="200" style="display:none;" />
+                <br>
+                <div id="disp_tmp_path"></div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-plus"></i> Add Administrator</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    @*$('#i_file').change(function (event) {
+        //@Model.Image=this.value;
+        //var tmppath = URL.createObjectURL(event.target.files[0]);
+        //var absolutePath = this.value;
+        //alert(absolutePath);
+        ///$("img").fadeIn().attr('src', URL.createObjectURL(event.target.files[0]));
+
+        //$("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>[" + tmppath + "]</strong>");
+    });*@
+    $(document).ready(function () {
+
+        document.getElementById('Click_Create').click();
+    });
+</script>
+
